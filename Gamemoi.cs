@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using static System.Console;
@@ -19,19 +19,18 @@ namespace Labirint
             LevelSelection();
             GameLoop();
         }
-
-        private void BordersOfDraw()
+           private void BordersOfDraw()
         {
             Clear();
             MyField.Draw();
             MyField.DrawCoins();
             ActualPlayer.Draw();
+            
 
             // Поместим курсор внизу поля игры
             SetCursorPosition(0, MyField.Rows + 2);
             WriteLine($"Keys collected: {KeyCollection.Count}");
         }
-
         private void Intro()
         {
             WriteLine("Welcome to the maze");
@@ -55,7 +54,7 @@ namespace Labirint
             Write("Enter your choice: ");
 
             int choice;
-            while (!int.TryParse(ReadLine(), out choice)  choice < 1  choice > 3)
+            while (!int.TryParse(ReadLine(), out choice) || choice < 1 || choice > 3)
             {
                 WriteLine("Invalid choice. Please enter a number between 1 and 3.");
                 Write("Enter your choice: ");
@@ -75,6 +74,8 @@ namespace Labirint
             ReadKey(true);
         }
 
+
+
         private void ActualPlayerInput()
         {
             ConsoleKey key;
@@ -84,7 +85,9 @@ namespace Labirint
                 ConsoleKeyInfo infoKey = ReadKey(true);
                 key = infoKey.Key;
 
-            } while (KeyAvailable); switch (key)
+            } while (KeyAvailable);
+
+            switch (key)
             {
                 case ConsoleKey.UpArrow:
                     if (MyField.AvailablePosition(ActualPlayer.X, ActualPlayer.Y - 1))
@@ -129,10 +132,13 @@ namespace Labirint
             // Проверяем, есть ли хотя бы один ключ у игрока
             if (KeyCollection.Count > 0)
             {
-                // Проверяем, находится ли игрок рядом с дверью и есть ли у него ключ
-                if (IsNextToDoorWithKey())
+                // Проверяем, находится ли игрок рядом с дверью
+                if (CheckDoor(ActualPlayer.X, ActualPlayer.Y - 1) ||
+                    CheckDoor(ActualPlayer.X, ActualPlayer.Y + 1) ||
+                    CheckDoor(ActualPlayer.X - 1, ActualPlayer.Y) ||
+                    CheckDoor(ActualPlayer.X + 1, ActualPlayer.Y))
                 {
-                    MyField.RemoveDoor(ActualPlayer.X, ActualPlayer.Y); // Правильно удаляем дверь, используя текущие координаты игрока
+                    MyField.RemoveDoor(ActualPlayer.X, ActualPlayer.Y);
                 }
                 else
                 {
@@ -147,23 +153,26 @@ namespace Labirint
             }
         }
 
-        private bool IsNextToDoorWithKey()
-        {
-            // Проверяем клетки вокруг игрока
-            for (int dx = -1; dx <= 1; dx++)
-            {
-                for (int dy = -1; dy <= 1; dy++)
-                {
-                    int x = ActualPlayer.X + dx;
-                    int y = ActualPlayer.Y + dy;
 
-                    // Проверяем, не выходит ли позиция за границы поля
-                    if (x >= 0 && x < MyField.Cols && y >= 0 && y < MyField.Rows)
+        private bool CheckDoor(int x, int y)
+        {
+            // Массив смещений, чтобы проверить все клетки вокруг двери
+            int[] dx;
+            int[] dy;
+            int placeElement = [] elementAtPosition;
+            
+
+            string elementAtPosition = MyField.Target(x, y);
+            if (elementAtPosition == "D")
+            {
+                // Проверяем клетки вокруг двери
+                for (int i = 0; i < dx.Length; i++)
+                {
+                    elementAtPosition = dx[placeElement];
+
+                    if (hasKey)
                     {
-                        if (MyField.Target(x, y) == "D" && KeyCollection.Exists(k => k.X == x && k.Y == y))
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -181,6 +190,7 @@ namespace Labirint
                 {
                     break;
                 }
+
                 Thread.Sleep(15);
             }
 
