@@ -127,7 +127,7 @@ namespace Labirint
             }
         }
 
-        private void OpenDoor()
+        private bool OpenDoor(int x, int y)
         {
             // Проверяем, есть ли хотя бы один ключ у игрока
             if 
@@ -138,45 +138,16 @@ namespace Labirint
                     CheckDoor(ActualPlayer.X - 1, ActualPlayer.Y) ||
                     CheckDoor(ActualPlayer.X + 1, ActualPlayer.Y))
                 {
-                    MyField.RemoveDoor(ActualPlayer.X, ActualPlayer.Y);
-                }
-                else (KeyCollection.Count = 0)
+                     if (KeyCollection.Count = 0)
                 {
                     WriteLine("You need to be next to the door with a key to open it!");
                     Thread.Sleep(15);
+                    return false;
                 }
+                    MyField.RemoveDoor(ActualPlayer.X, ActualPlayer.Y);
+                    return true;
+                }  
             }
-            else
-            {
-                WriteLine("You need a key to open this door!");
-                Thread.Sleep(15);
-            }
-        }
-
-
-        private bool CheckDoor(int x, int y)
-        {
-            // Массив смещений, чтобы проверить все клетки вокруг двери
-            int[] dx;
-            int[] dy;
-            int placeElement = [] elementAtPosition;
-            
-
-            string elementAtPosition = MyField.Target(x, y);
-            if (elementAtPosition == "D")
-            {
-                // Проверяем клетки вокруг двери
-                for (int i = 0; i < dx.Length; i++)
-                {
-                    elementAtPosition = dx[placeElement];
-
-                    if (hasKey)
-                    {
-                        return true;
-                    }
-                }
-            }
-            return false;
         }
 
         private void GameLoop()
