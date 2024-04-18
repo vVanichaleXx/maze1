@@ -130,7 +130,7 @@ namespace Labirint
         private void OpenDoor()
         {
             // Проверяем, есть ли хотя бы один ключ у игрока
-            if (KeyCollection.Count > 0)
+            if 
             {
                 // Проверяем, находится ли игрок рядом с дверью
                 if (CheckDoor(ActualPlayer.X, ActualPlayer.Y - 1) ||
@@ -140,7 +140,7 @@ namespace Labirint
                 {
                     MyField.RemoveDoor(ActualPlayer.X, ActualPlayer.Y);
                 }
-                else
+                else (KeyCollection.Count = 0)
                 {
                     WriteLine("You need to be next to the door with a key to open it!");
                     Thread.Sleep(15);
